@@ -21,37 +21,39 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService empService;
 
-	@GetMapping("/list")
+	@GetMapping("/listEmployee")
 	public String listEmployees(Model model) {
 		List<Employee> allEmployees = empService.findAllEmployees();
-		model.addAttribute("Employees", allEmployees);
-		return "employees/employees-forum";
+		model.addAttribute("employee", allEmployees);
+		return "employees/employee-forum";
 	}
 
 	@GetMapping("/addEmployee")
 	public String addEmployee(Model model) {
 		Employee emp = new Employee();
-		model.addAttribute("Employee", emp);
+		model.addAttribute("employee", emp);
 		return "employees/employee-form";
 	}
 
-	@PostMapping("/save")
+	@PostMapping("/saveEmployee")
 	public String saveEmployee(@ModelAttribute("employee") Employee emp) {
 		empService.saveEmployeeDetails(emp);
-		return "redirect:/employees/list";
+		return "employees/employee-forum";
 	}
 
-	@PostMapping("/save")
+	@GetMapping("/updateEmployee")
 	public String showFormForUpdate(@RequestParam("employeeId") Integer id, Model model) {
-		Employee employee = empService.findEmployeeByID(id);
-		Model attribute = model.addAttribute("employee", employee);
-		return "employees/employee-form";
+	    Employee employee = empService.findEmployeeByID(id);
+	    model.addAttribute("employee", employee);
+	    return "employees/employee-form";
 	}
+
 
 	@GetMapping("/delete")
 	public String delete(@RequestParam("employeeId") Integer id) {
 		empService.deleteByid(id);
-		return "employees/employee-form";
+		return "redirect:/employees/list";
+
 
 	}
 
